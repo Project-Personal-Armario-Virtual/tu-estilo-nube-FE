@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './components/Login';
-import UploadImages from './components/UploadImages';
+import Login from './pages/Login';
+import UploadImages from './pages/UploadImages';
 
 function App() {
   return (

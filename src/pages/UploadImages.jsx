@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../api';
+import api from '../services/api';
 
 const UploadImages = () => {
   const [file, setFile] = useState(null);
@@ -16,6 +16,9 @@ const UploadImages = () => {
       return;
     }
 
+    const token = localStorage.getItem('token');
+    
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -27,6 +30,7 @@ const UploadImages = () => {
       });
       setMessage(response.data);
     } catch (error) {
+      console.error('Error al subir imagen:', error.response || error);
       setMessage('Error uploading image: ' + (error.response?.data || error.message));
     }
   };
