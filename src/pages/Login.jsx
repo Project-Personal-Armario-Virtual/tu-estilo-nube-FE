@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { login } from "../services/authService";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    console.log("Enviando credenciales:", { username, password }); // Depuración
     try {
-      await login(username, password);
+      const token = await login(username, password);
       setMessage("Login successful");
+      navigate('/upload');
     } catch (error) {
+      console.error("Error en el login:", error.response || error); // Detalle del error
       setMessage("Invalid credentials");
     }
   };
