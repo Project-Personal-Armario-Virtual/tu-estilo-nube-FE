@@ -7,14 +7,12 @@ const UploadImages = () => {
   const [images, setImages] = useState([]); 
   const [imagePreviews, setImagePreviews] = useState({}); 
 
-
   useEffect(() => {
     const fetchImages = async () => {
       try {
         const response = await api.get('/images/list');
         setImages(response.data);
 
-    
         const previews = {};
         for (const image of response.data) {
           const imageResponse = await api.get(`/images/${image.id}`, {
@@ -59,7 +57,6 @@ const UploadImages = () => {
       const updatedImages = await api.get('/images/list');
       setImages(updatedImages.data);
 
-     
       const newImage = updatedImages.data[updatedImages.data.length - 1];
       const imageResponse = await api.get(`/images/${newImage.id}`, {
         responseType: 'blob'
@@ -114,6 +111,9 @@ const UploadImages = () => {
                 <p>Loading image...</p>
               )}
               <p>{image.fileName}</p>
+              {image.labels && image.labels.length > 0 && (
+                <p>Etiquetas: {image.labels.join(', ')}</p>
+              )}
               <button onClick={() => handleDownload(image.id, image.fileName)}>
                 Download
               </button>
