@@ -14,7 +14,12 @@ const UploadImages = () => {
   const fetchCategories = async () => {
     try {
       const res = await api.get('/categories');
-      setCategories(res.data);
+      // Imprimir en consola la respuesta para verificar el formato
+      console.log("Response from /categories:", res.data);
+      // Si res.data es un arreglo lo asigna directamente, si no, asume que la propiedad correcta es res.data.categories
+      const cats = Array.isArray(res.data) ? res.data : res.data.categories;
+      setCategories(cats);
+      console.log("Categories state updated:", cats);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -49,6 +54,9 @@ const UploadImages = () => {
     };
   }, []);
 
+  // Verificar en cada render el valor actual de "categories"
+  console.log("Current categories state:", categories);
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -57,7 +65,6 @@ const UploadImages = () => {
     setSelectedCategory(e.target.value);
   };
 
-  // Manejo del cambio en el input para nueva categoría
   const handleNewCategoryChange = (e) => {
     setNewCategoryName(e.target.value);
   };
@@ -73,8 +80,7 @@ const UploadImages = () => {
       const response = await api.post('/categories', { name: newCategoryName });
       setMessage("Category added successfully");
       setNewCategoryName('');
-      // Actualiza la lista de categorías
-      fetchCategories();
+      await fetchCategories();
     } catch (error) {
       console.error("Error adding category:", error);
       setMessage("Error adding category: " + (error.response?.data || error.message));
@@ -124,6 +130,19 @@ const UploadImages = () => {
     }
   };
 
+  // Función para eliminar imagen con confirmación
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this image?");
+    if (!confirmDelete) return;
+    try {
+      const response = await api.delete(`/images/${id}`);
+      setMessage(response.data);
+      await fetchImages();
+    } catch (error) {
+      setMessage('Error deleting image: ' + (error.response?.data || error.message));
+    }
+  };
+
   return (
     <div>
       <h2>Upload Image</h2>
@@ -131,11 +150,13 @@ const UploadImages = () => {
         <input type="file" onChange={handleFileChange} />
         <select value={selectedCategory} onChange={handleCategoryChange}>
           <option value="">Select Category (optional)</option>
-          {categories.map(cat => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
+          {Array.isArray(categories) &&
+            categories.map(cat => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))
+          }
         </select>
         <button type="submit">Upload</button>
       </form>
@@ -176,6 +197,9 @@ const UploadImages = () => {
               )}
               <button onClick={() => handleDownload(image.id, image.fileName)}>
                 Download
+              </button>
+              <button onClick={() => handleDelete(image.id)}>
+                Delete
               </button>
             </div>
           </li>
