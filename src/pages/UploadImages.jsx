@@ -14,9 +14,7 @@ const UploadImages = () => {
   const fetchCategories = async () => {
     try {
       const res = await api.get('/categories');
-      // Imprimir en consola la respuesta para verificar el formato
       console.log("Response from /categories:", res.data);
-      // Si res.data es un arreglo lo asigna directamente, si no, asume que la propiedad correcta es res.data.categories
       const cats = Array.isArray(res.data) ? res.data : res.data.categories;
       setCategories(cats);
       console.log("Categories state updated:", cats);
@@ -54,7 +52,6 @@ const UploadImages = () => {
     };
   }, []);
 
-  // Verificar en cada render el valor actual de "categories"
   console.log("Current categories state:", categories);
 
   const handleFileChange = (e) => {
@@ -194,6 +191,9 @@ const UploadImages = () => {
               )}
               {image.categoryName && (
                 <p>Categoría: {image.categoryName}</p>
+              )}
+              {image.dominantColor && (
+                <p>Dominant Color: {image.dominantColor}</p>
               )}
               <button onClick={() => handleDownload(image.id, image.fileName)}>
                 Download
