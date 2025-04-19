@@ -1,33 +1,54 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from "react-router-dom"
+import Layout from "../components/Layout"
+import { Button } from "@/components/ui/button"
+import { useAuth } from "../hooks/useAuth"
 
 const Home = () => {
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F0F0F5] text-[#333]">
-      <div className="text-center space-y-6 px-4">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#FF7F50]">
-          Tu Armario Virtual 👚👖
-        </h1>
-        <p className="text-lg md:text-xl text-[#555]">
-          Organiza tus prendas, visualiza combinaciones y recibe recomendaciones.
-        </p>
+  const navigate = useNavigate()
+  const { user } = useAuth()
 
-        <div className="flex space-x-4 justify-center">
-          <Link
-            to="/login"
-            className="bg-[#FF7F50] hover:bg-[#ff6333] text-white font-medium px-6 py-3 rounded"
-          >
-            Iniciar sesión
-          </Link>
-          <Link
-            to="/register"
-            className="bg-[#00CED1] hover:bg-[#00b4b7] text-white font-medium px-6 py-3 rounded"
-          >
-            Crear cuenta
-          </Link>
+  return (
+    <Layout>
+      {/* Hero Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-b from-background to-surface">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center">
+            <div className="md:w-1/2 mb-10 md:mb-0">
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-text">Tu Armario Virtual</h1>
+              <p className="text-xl mb-8 text-text/80">
+                Organiza tu ropa, crea conjuntos y recibe recomendaciones personalizadas para vestirte mejor cada día.
+              </p>
+              {user ? (
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button size="lg" onClick={() => navigate("/dashboard")}>
+                    Ir al Dashboard
+                  </Button>
+                  <Button size="lg" variant="outline" onClick={() => navigate("/closet")}>
+                    Ver Mi Armario
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button size="lg" onClick={() => navigate("/register")}>
+                    Registrarse
+                  </Button>
+                  <Button size="lg" variant="outline" onClick={() => navigate("/login")}>
+                    Iniciar Sesión
+                  </Button>
+                </div>
+              )}
+            </div>
+            <div className="md:w-1/2">
+              <img
+                src="/placeholder.svg?height=400&width=600"
+                alt="Virtual Closet Illustration"
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </Layout>
   )
 }
 
