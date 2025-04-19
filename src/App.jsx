@@ -1,16 +1,29 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
-import UploadImages from './pages/UploadImages';
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import ProtectedRoute    from './components/ProtectedRoute'
+import Home from './pages/Home'
+import Login         from './pages/Login'
+import UploadImages  from './pages/UploadImages'
+// (luego podrás añadir más páginas: Dashboard, Profile, etc.)
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/upload" element={<UploadImages />} />
-      </Routes>
-    </Router>
-  );
+    <Routes>
+      {/* ruta pública */}
+      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Login />} />
+
+      {/* ruta protegida */}
+      <Route
+        path="/upload"
+        element={
+          <ProtectedRoute>
+            <UploadImages />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
+  )
 }
 
-export default App;
+export default App
