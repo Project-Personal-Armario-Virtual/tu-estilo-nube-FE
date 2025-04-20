@@ -1,51 +1,64 @@
-import React, { useState } from "react";
-import { login } from "../services/authService";
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import authService from "../services/authService"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [message, setMessage] = useState("")
+  const navigate = useNavigate()
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    console.log("Enviando credenciales:", { username, password }); // Depuración
+    e.preventDefault()
     try {
-      const token = await login(username, password);
-      setMessage("Login successful");
-      navigate('/upload');
-    } catch (error) {
-      console.error("Error en el login:", error.response || error); // Detalle del error
-      setMessage("Invalid credentials");
+      await authService.login({ username, password })
+      navigate("/dashboard", { replace: true })
+    } catch (err) {
+      setMessage("Invalid credentials. Please try again.")
     }
-  };
+  }
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md shadow-md">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl">Welcome Back</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              Sign In
+            </Button>
+          </form>
+          {message && <p className="text-red-500 text-sm mt-4">{message}</p>}
+        </CardContent>
+      </Card>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
