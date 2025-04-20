@@ -1,45 +1,75 @@
-// src/pages/Dashboard.jsx
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import Layout from "../components/Layout";
+import { StatsCard } from "@/components/dashboard/StatsCard"
+import { RecentItems } from "@/components/dashboard/RecentItems"
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Shirt, Tag, Clock, Plus, Sparkles, LayoutGrid } from "lucide-react"
+import { Link } from "react-router-dom"
 
-const Dashboard = () => {
-  const navigate = useNavigate();
-
+export default function Dashboard() {
   return (
-    <Layout>
-      <section className="py-16 px-4 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-text">Welcome to your Dashboard</h1>
+    <div className="container mx-auto py-8 px-4">
+      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">Total Items</h2>
-            <p className="text-3xl font-bold text-primary">12</p>
-          </div>
+      {/* Grid de estadísticas */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <StatsCard
+          title="Total Items"
+          value="36"
+          icon={<Shirt className="h-4 w-4" />}
+          description="Clothing registered in your closet"
+        />
+        <StatsCard
+          title="Categories"
+          value="7"
+          icon={<Tag className="h-4 w-4" />}
+          description="Different categories in use"
+        />
+        <StatsCard
+          title="Outfits Created"
+          value="12"
+          icon={<Sparkles className="h-4 w-4" />}
+          description="Saved outfit combinations"
+        />
+        <StatsCard
+          title="Most Common Color"
+          value="Blue"
+          icon={<LayoutGrid className="h-4 w-4" />}
+          description="In your wardrobe"
+        />
+      </div>
 
-          <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">Categories</h2>
-            <p className="text-3xl font-bold text-primary">5</p>
-          </div>
+      {/* Grilla principal */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Sección de items recientes */}
+        <RecentItems />
 
-          <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">Recent Uploads</h2>
-            <p className="text-3xl font-bold text-primary">3</p>
-          </div>
-        </div>
-
-        <div className="mt-10 flex gap-4">
-          <Button size="lg" onClick={() => navigate("/upload")}>
-            Upload New Item
-          </Button>
-          <Button size="lg" variant="outline" onClick={() => navigate("/closet")}>
-            View My Closet
-          </Button>
-        </div>
-      </section>
-    </Layout>
-  );
-};
-
-export default Dashboard;
+        {/* Sección de acciones rápidas */}
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button asChild variant="outline" className="w-full justify-start gap-2">
+              <Link to="/upload">
+                <Plus className="h-4 w-4" />
+                Add New Item
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start gap-2">
+              <Link to="/outfits">
+                <Sparkles className="h-4 w-4" />
+                Generate Outfit
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start gap-2">
+              <Link to="/categories">
+                <Tag className="h-4 w-4" />
+                Browse Categories
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}

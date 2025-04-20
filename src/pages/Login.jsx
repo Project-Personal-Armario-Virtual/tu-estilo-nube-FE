@@ -1,56 +1,64 @@
-// src/pages/Login.jsx
-import React, { useState } from "react";
-import authService from "../services/authService";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import authService from "../services/authService"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [message, setMessage] = useState("")
+  const navigate = useNavigate()
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      await authService.login({ username, password });
-      navigate("/upload", { replace: true });
+      await authService.login({ username, password })
+      navigate("/dashboard", { replace: true })
     } catch (err) {
-      setMessage("Credenciales inválidas");
+      setMessage("Invalid credentials. Please try again.")
     }
-  };
+  }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl mb-4 text-gray-800">Login</h2>
-      <form onSubmit={handleLogin} className="space-y-4">
-        <div>
-          <label className="block mb-1 text-gray-600">Usuario</label>
-          <input
-            className="w-full border px-3 py-2 rounded"
-            type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block mb-1 text-gray-600">Contraseña</label>
-          <input
-            className="w-full border px-3 py-2 rounded"
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Entrar
-        </button>
-      </form>
-      {message && <p className="mt-4 text-red-500">{message}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md shadow-md">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl">Welcome Back</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              Sign In
+            </Button>
+          </form>
+          {message && <p className="text-red-500 text-sm mt-4">{message}</p>}
+        </CardContent>
+      </Card>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
