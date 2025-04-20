@@ -1,22 +1,16 @@
-import React from 'react'
+// src/components/Header.jsx
 import { Link } from 'react-router-dom'
 
 export default function Header() {
   return (
-    <header className="bg-white shadow-md">
-      <div className="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-gray-800">
-          Tu Armario
-        </Link>
-        <nav className="space-x-4">
-          <Link to="/" className="text-gray-600 hover:text-gray-900">
-            Login
-          </Link>
-          <Link to="/upload" className="text-gray-600 hover:text-gray-900">
-            Subir prenda
-          </Link>
-        </nav>
-      </div>
+    <header className="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+      <Link to="/" className="text-xl font-bold text-primary">Tu Armario Virtual</Link>
+      <nav className="space-x-4">
+        <Link to="/dashboard" className="text-gray-700 hover:text-primary">Dashboard</Link>
+        <Link to="/closet" className="text-gray-700 hover:text-primary">Closet</Link>
+        <Link to="/upload" className="text-gray-700 hover:text-primary">Subir</Link>
+        <Link to="/login" className="text-gray-700 hover:text-primary">Login</Link>
+      </nav>
     </header>
   )
 }
