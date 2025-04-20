@@ -11,14 +11,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function ItemCard({ id, name, category, color, image, onDelete }) {
+const COLOR_LABELS = [
+  "Red", "Blue", "Green", "Yellow", "Black", "White", "Gray",
+  "Orange", "Pink", "Purple", "Brown", "Beige", "Navy", "Teal",
+];
+
+function extractColorFromLabels(labels = []) {
+  const found = labels.find((label) =>
+    COLOR_LABELS.includes(label.trim())
+  );
+  return found || "N/A";
+}
+
+export function ItemCard({ id, name, category, labels = [], image, onDelete }) {
+  const color = extractColorFromLabels(labels);
+
   return (
     <Card className="overflow-hidden h-full flex flex-col">
-      <div className="relative aspect-square">
+      <div className="relative w-full h-60 bg-gray-100">
         <img
           src={image || "/placeholder.svg"}
           alt={name}
-          className="object-cover w-full h-full"
+          className="object-contain w-full h-full"
         />
         <div className="absolute top-2 right-2">
           <DropdownMenu>
@@ -53,8 +67,9 @@ export function ItemCard({ id, name, category, color, image, onDelete }) {
       <CardContent className="p-4 flex-grow flex flex-col">
         <h3 className="font-medium line-clamp-1">{name}</h3>
         <div className="mt-1 text-sm text-text/70 space-y-1">
-          <p>Category: {category}</p>
+          <p>Category: {category || "Uncategorized"}</p>
           <p>Color: {color}</p>
+          {labels.length > 0 && <p>Tags: {labels.join(", ")}</p>}
         </div>
         <div className="mt-auto pt-4">
           <Button asChild variant="outline" size="sm" className="w-full">
