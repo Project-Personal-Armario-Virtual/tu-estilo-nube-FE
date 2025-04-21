@@ -1,46 +1,40 @@
-// src/pages/Outfits.jsx
 import { useState } from "react"
-import  OutfitGenerator  from "@/components/outfits/OutfitGenerator"
-import  { OutfitCard }  from "@/components/outfits/OutfitCard"
+import OutfitGenerator from "@/components/outfits/OutfitGenerator"
+import { OutfitCard } from "@/components/outfits/OutfitCard"
 import { useToast } from "@/hooks/use-toast"
-
-const mockItems = [
-  { id: 1, name: "Blue Denim Jacket", category: "Outerwear", image: "/placeholder.svg" },
-  { id: 2, name: "White T-Shirt", category: "Tops", image: "/placeholder.svg" },
-  { id: 3, name: "Black Jeans", category: "Bottoms", image: "/placeholder.svg" },
-  { id: 4, name: "Brown Leather Boots", category: "Shoes", image: "/placeholder.svg" },
-  { id: 5, name: "Red Sweater", category: "Tops", image: "/placeholder.svg" },
-  { id: 6, name: "Gray Scarf", category: "Accessories", image: "/placeholder.svg" },
-]
-
-const mockOutfits = [
-  { id: 1, name: "Casual Weekend", items: [mockItems[0], mockItems[1], mockItems[2], mockItems[3]], occasion: "Casual", isSaved: false },
-  { id: 2, name: "Office Ready", items: [mockItems[4], mockItems[2], mockItems[3], mockItems[5]], occasion: "Work", isSaved: true },
-]
+import outfitService from "@/services/outfitService"
 
 export default function OutfitsPage() {
-  const [outfits, setOutfits] = useState(mockOutfits)
+  const [outfits, setOutfits] = useState([])
   const [isGenerating, setIsGenerating] = useState(false)
   const { toast } = useToast()
 
-  const handleGenerate = (settings) => {
+  const handleGenerate = async (settings) => {
     setIsGenerating(true)
-    setTimeout(() => {
-      const newOutfit = {
-        id: outfits.length + 1,
-        name: `${settings.occasion} ${settings.season}`,
-        items: [mockItems[0], mockItems[1], mockItems[2], settings.includeAccessories ? mockItems[5] : mockItems[3]],
-        occasion: settings.occasion,
-        isSaved: false,
-      }
-      setOutfits([newOutfit, ...outfits])
+    try {
+      const result = await outfitService.generate(settings)
+      setOutfits(result)
+      toast({
+        title: "Outfits generated!",
+        description: `${result.length} outfit${result.length === 1 ? "" : "s"} created.`,
+      })
+    } catch (err) {
+      toast({
+        title: "Error generating outfits",
+        description: err.message || "Unexpected error.",
+        variant: "destructive",
+      })
+    } finally {
       setIsGenerating(false)
-      toast({ title: "Outfit generated!", description: "New outfit created." })
-    }, 1500)
+    }
   }
 
   const handleSaveOutfit = (id) => {
-    setOutfits(outfits.map((outfit) => (outfit.id === id ? { ...outfit, isSaved: !outfit.isSaved } : outfit)))
+    setOutfits((prev) =>
+      prev.map((outfit) =>
+        outfit.id === id ? { ...outfit, isSaved: !outfit.isSaved } : outfit
+      )
+    )
   }
 
   return (
@@ -50,11 +44,15 @@ export default function OutfitsPage() {
         <OutfitGenerator onGenerate={handleGenerate} isGenerating={isGenerating} />
         <div className="lg:col-span-2">
           {outfits.length === 0 ? (
-            <p>No outfits yet.</p>
+            <p className="text-muted-foreground">No outfits yet. Generate your first!</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {outfits.map((outfit) => (
-                <OutfitCard key={outfit.id} {...outfit} onSave={handleSaveOutfit} />
+              {outfits.map((outfit, index) => (
+                <OutfitCard
+                  key={index}
+                  {...outfit}
+                  onSave={handleSaveOutfit}
+                />
               ))}
             </div>
           )}
