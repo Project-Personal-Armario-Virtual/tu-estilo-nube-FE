@@ -3,6 +3,7 @@ import OutfitGenerator from "@/components/outfits/OutfitGenerator"
 import { OutfitCard } from "@/components/outfits/OutfitCard"
 import { useToast } from "@/hooks/use-toast"
 import outfitService from "@/services/outfitService"
+import OutfitScoreInfo from "@/components/outfits/OutfitScoreInfo"
 
 export default function OutfitsPage() {
   const [outfits, setOutfits] = useState([])
@@ -39,7 +40,10 @@ export default function OutfitsPage() {
 
   return (
     <main className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-4">Outfit Recommendations</h1>
+      <div className="flex items-center mb-4">
+        <h1 className="text-3xl font-bold">Outfit Recommendations</h1>
+        <OutfitScoreInfo />
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <OutfitGenerator onGenerate={handleGenerate} isGenerating={isGenerating} />
         <div className="lg:col-span-2">
