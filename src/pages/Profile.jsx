@@ -1,17 +1,24 @@
-// src/pages/Profile.jsx
 import React from "react"
-import Navbar from "@/components/Navbar"
+
 import { ProfileForm } from "@/components/profile/ProfileForm"
-import  ThemeToggle  from "@/components/ThemeToggle"
+import ThemeToggle from "@/components/ThemeToggle"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { LogOut, Key, Bell, Shield } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import authService from "@/services/authService"
 
 export default function Profile() {
+  const navigate = useNavigate()
+
+  const handleSignOut = () => {
+    authService.logout()
+    navigate("/login", { replace: true })
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-     
       <main className="flex-grow container mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Profile & Settings</h1>
@@ -53,7 +60,9 @@ export default function Profile() {
                       <Shield className="h-4 w-4 mr-2" />
                       Two-Factor Authentication
                     </h3>
-                    <p className="text-sm text-text/70">Add an extra layer of security to your account</p>
+                    <p className="text-sm text-text/70">
+                      Add an extra layer of security to your account
+                    </p>
                   </div>
                   <Button variant="outline">Enable</Button>
                 </div>
@@ -70,7 +79,9 @@ export default function Profile() {
                 <div className="flex justify-between items-center">
                   <div className="space-y-1">
                     <h3 className="font-medium">Theme</h3>
-                    <p className="text-sm text-text/70">Choose between light and dark mode</p>
+                    <p className="text-sm text-text/70">
+                      Choose between light and dark mode
+                    </p>
                   </div>
                   <ThemeToggle />
                 </div>
@@ -83,7 +94,9 @@ export default function Profile() {
                       <Bell className="h-4 w-4 mr-2" />
                       Notifications
                     </h3>
-                    <p className="text-sm text-text/70">Manage email and push notifications</p>
+                    <p className="text-sm text-text/70">
+                      Manage email and push notifications
+                    </p>
                   </div>
                   <Button variant="outline">Configure</Button>
                 </div>
@@ -97,6 +110,7 @@ export default function Profile() {
               <CardContent className="space-y-4">
                 <Button
                   variant="outline"
+                  onClick={handleSignOut}
                   className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
