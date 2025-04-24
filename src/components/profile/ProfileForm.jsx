@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import axios from "axios"
+import api from "@/services/api"
 
 const formSchema = z.object({
   displayName: z.string().min(2, {
@@ -43,24 +43,20 @@ export function ProfileForm() {
     },
   })
 
-  // ✅ Cargar datos del perfil desde el backend con el token
-  useEffect(() => {
-    const token = localStorage.getItem("token")
 
-    axios.get("/api/profile/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+  useEffect(() => {
+    api.get("/profile/me")
       .then((res) => {
-        const { name, bio, user } = res.data
-        console.log("✅ Perfil cargado:", res.data)
+        const { displayName, bio } = res.data
+        const user = JSON.parse(localStorage.getItem("user"))
 
         form.reset({
-          displayName: name || "",
+          displayName: displayName || "",
           email: user?.email || "",
           bio: bio || "",
         })
+
+        console.log("✅ Perfil cargado:", res.data)
       })
       .catch(() => {
         toast({
@@ -72,18 +68,12 @@ export function ProfileForm() {
       .finally(() => setLoading(false))
   }, [])
 
-  // ✅ Enviar cambios al backend
-  const onSubmit = async (values) => {
-    const token = localStorage.getItem("token")
 
+  const onSubmit = async (values) => {
     try {
-      await axios.put("/api/profile", {
+      await api.put("/profile", {
         displayName: values.displayName,
         bio: values.bio,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       })
 
       toast({
