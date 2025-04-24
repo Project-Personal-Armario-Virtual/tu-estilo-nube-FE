@@ -1,5 +1,6 @@
 // src/pages/Profile.jsx
 import React from "react"
+import Navbar from "@/components/Navbar"
 import { ProfileForm } from "@/components/profile/ProfileForm"
 import  ThemeToggle  from "@/components/ThemeToggle"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"

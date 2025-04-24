@@ -1,4 +1,4 @@
-// src/components/auth/RegisterForm.jsx
+
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { z } from "zod"
@@ -6,13 +6,22 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
+import authService from "@/services/authService"
 
 const formSchema = z
   .object({
     name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+    username: z.string().min(3, { message: "Username must be at least 3 characters." }),
     email: z.string().email({ message: "Please enter a valid email address." }),
     password: z.string().min(8, { message: "Password must be at least 8 characters." }),
     confirmPassword: z.string(),
@@ -32,24 +41,34 @@ export function RegisterForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   })
 
-  function onSubmit(values) {
-    // Aquí puedes conectar con tu backend
-    console.log(values)
+  async function onSubmit(values) {
+    const { username, email, password } = values
 
-    toast({
-      title: "Account created!",
-      description: "You have successfully registered. Redirecting to login...",
-    })
+    try {
+      await authService.register({ username, email, password })
 
-    setTimeout(() => {
-      navigate("/login", { replace: true })
-    }, 2000)
+      toast({
+        title: "Account created!",
+        description: "You have successfully registered. Redirecting to login...",
+      })
+
+      setTimeout(() => {
+        navigate("/login", { replace: true })
+      }, 2000)
+    } catch (err) {
+      toast({
+        title: "Registration failed",
+        description: err.message,
+        variant: "destructive",
+      })
+    }
   }
 
   return (
@@ -69,6 +88,20 @@ export function RegisterForm() {
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
                   <Input placeholder="John Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="yourusername" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -123,7 +156,11 @@ export function RegisterForm() {
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <Input type={showConfirmPassword ? "text" : "password"} placeholder="********" {...field} />
+                    <Input
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="********"
+                      {...field}
+                    />
                     <Button
                       type="button"
                       variant="ghost"
@@ -132,7 +169,11 @@ export function RegisterForm() {
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                     >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </FormControl>

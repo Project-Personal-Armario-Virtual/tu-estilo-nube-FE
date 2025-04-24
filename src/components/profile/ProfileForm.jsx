@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -17,9 +17,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import api from "@/services/api"
 
 const formSchema = z.object({
-  name: z.string().min(2, {
+  displayName: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
   email: z.string().email({
@@ -28,37 +29,77 @@ const formSchema = z.object({
   bio: z.string().optional(),
 })
 
-const mockUser = {
-  name: "Jane Doe",
-  email: "jane.doe@example.com",
-  bio: "Fashion enthusiast and minimalist. I love creating versatile outfits with fewer pieces.",
-}
-
 export function ProfileForm() {
   const [isEditing, setIsEditing] = useState(false)
+  const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: mockUser,
+    defaultValues: {
+      displayName: "",
+      email: "",
+      bio: "",
+    },
   })
 
-  function onSubmit(values) {
-    console.log(values)
-    toast({
-      title: "Profile updated",
-      description: "Your profile has been updated successfully.",
-    })
-    setIsEditing(false)
+
+  useEffect(() => {
+    api.get("/profile/me")
+      .then((res) => {
+        const { displayName, bio } = res.data
+        const user = JSON.parse(localStorage.getItem("user"))
+
+        form.reset({
+          displayName: displayName || "",
+          email: user?.email || "",
+          bio: bio || "",
+        })
+
+        console.log("✅ Perfil cargado:", res.data)
+      })
+      .catch(() => {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "No se pudo cargar el perfil.",
+        })
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+
+  const onSubmit = async (values) => {
+    try {
+      await api.put("/profile", {
+        displayName: values.displayName,
+        bio: values.bio,
+      })
+
+      toast({
+        title: "Perfil actualizado",
+        description: "Los cambios se guardaron correctamente.",
+      })
+
+      setIsEditing(false)
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Error al actualizar",
+        description: "Ocurrió un problema al guardar los cambios.",
+      })
+    }
   }
+
+  if (loading) return <p>Cargando...</p>
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Profile Information</h2>
+        <h2 className="text-xl font-bold">Información del perfil</h2>
         {!isEditing && (
           <Button variant="outline" onClick={() => setIsEditing(true)}>
-            Edit Profile
+            Editar perfil
           </Button>
         )}
       </div>
@@ -67,10 +108,10 @@ export function ProfileForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="name"
+            name="displayName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>Nombre completo</FormLabel>
                 <FormControl>
                   <Input {...field} disabled={!isEditing} />
                 </FormControl>
@@ -84,10 +125,11 @@ export function ProfileForm() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Correo electrónico</FormLabel>
                 <FormControl>
-                  <Input type="email" {...field} disabled={!isEditing} />
+                  <Input type="email" {...field} disabled readOnly />
                 </FormControl>
+                <FormDescription>Este campo no se puede modificar.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -98,17 +140,17 @@ export function ProfileForm() {
             name="bio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bio</FormLabel>
+                <FormLabel>Biografía</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Tell us about yourself and your style preferences..."
+                    placeholder="Cuéntanos sobre ti y tu estilo..."
                     className="resize-none"
                     {...field}
                     disabled={!isEditing}
                     value={field.value || ""}
                   />
                 </FormControl>
-                <FormDescription>This will be displayed on your public profile.</FormDescription>
+                <FormDescription>Este texto se mostrará en tu perfil público.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -116,10 +158,14 @@ export function ProfileForm() {
 
           {isEditing && (
             <div className="flex justify-end space-x-4">
-              <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
-                Cancel
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEditing(false)}
+              >
+                Cancelar
               </Button>
-              <Button type="submit">Save Changes</Button>
+              <Button type="submit">Guardar cambios</Button>
             </div>
           )}
         </form>
