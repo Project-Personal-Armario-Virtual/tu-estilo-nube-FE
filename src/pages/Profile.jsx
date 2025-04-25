@@ -1,11 +1,14 @@
 import React from "react"
 
 import { ProfileForm } from "@/components/profile/ProfileForm"
+import ChangePasswordForm from "@/components/profile/ChangePasswordForm"
 import ThemeToggle from "@/components/ThemeToggle"
+import DeleteAccountButton from "@/components/profile/DeleteAccountButton"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { LogOut, Key, Bell, Shield } from "lucide-react"
+import { LogOut } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import authService from "@/services/authService"
 
@@ -27,6 +30,7 @@ export default function Profile() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-6">
+            {/* Información de cuenta */}
             <Card>
               <CardHeader>
                 <CardTitle>Account</CardTitle>
@@ -36,40 +40,18 @@ export default function Profile() {
               </CardContent>
             </Card>
 
+            {/* Seguridad */}
             <Card>
               <CardHeader>
                 <CardTitle>Security</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="space-y-1">
-                    <h3 className="font-medium flex items-center">
-                      <Key className="h-4 w-4 mr-2" />
-                      Password
-                    </h3>
-                    <p className="text-sm text-text/70">Last changed 3 months ago</p>
-                  </div>
-                  <Button variant="outline">Change Password</Button>
-                </div>
-
-                <Separator />
-
-                <div className="flex justify-between items-center">
-                  <div className="space-y-1">
-                    <h3 className="font-medium flex items-center">
-                      <Shield className="h-4 w-4 mr-2" />
-                      Two-Factor Authentication
-                    </h3>
-                    <p className="text-sm text-text/70">
-                      Add an extra layer of security to your account
-                    </p>
-                  </div>
-                  <Button variant="outline">Enable</Button>
-                </div>
+              <CardContent className="space-y-6">
+                <ChangePasswordForm />
               </CardContent>
             </Card>
           </div>
 
+          {/* Preferencias y acciones */}
           <div className="space-y-6">
             <Card>
               <CardHeader>
@@ -84,21 +66,6 @@ export default function Profile() {
                     </p>
                   </div>
                   <ThemeToggle />
-                </div>
-
-                <Separator />
-
-                <div className="flex justify-between items-center">
-                  <div className="space-y-1">
-                    <h3 className="font-medium flex items-center">
-                      <Bell className="h-4 w-4 mr-2" />
-                      Notifications
-                    </h3>
-                    <p className="text-sm text-text/70">
-                      Manage email and push notifications
-                    </p>
-                  </div>
-                  <Button variant="outline">Configure</Button>
                 </div>
               </CardContent>
             </Card>
@@ -117,12 +84,7 @@ export default function Profile() {
                   Sign Out
                 </Button>
 
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
-                >
-                  Delete Account
-                </Button>
+                <DeleteAccountButton />
               </CardContent>
             </Card>
           </div>

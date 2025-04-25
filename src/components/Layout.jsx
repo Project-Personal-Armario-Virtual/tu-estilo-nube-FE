@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import { Toaster } from "@/components/ui/toaster"
 import Navbar from './Navbar'
 import Footer from './Footer'
 
@@ -11,6 +12,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <Toaster />
     </div>
   )
 }
