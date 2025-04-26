@@ -51,10 +51,18 @@ export default function OutfitsPage() {
             <p className="text-muted-foreground">No outfits yet. Generate your first!</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {outfits.map((outfit, index) => (
+              {outfits.map((outfit) => (
                 <OutfitCard
-                  key={index}
-                  {...outfit}
+                  key={outfit.id} 
+                  id={outfit.id}  
+                  top={outfit.top}
+                  bottom={outfit.bottom}
+                  shoes={outfit.shoes}
+                  accessory={outfit.accessory}
+                  occasion={outfit.occasion}
+                  season={outfit.season}
+                  score={outfit.score}
+                  isSaved={outfit.isSaved}
                   onSave={handleSaveOutfit}
                 />
               ))}
