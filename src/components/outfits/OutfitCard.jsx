@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react"
 import { Heart } from "lucide-react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
+import favoriteService from "@/services/favoriteService"
 
 export function OutfitCard({
+  id,
   top,
   bottom,
   shoes,
@@ -16,6 +19,7 @@ export function OutfitCard({
 }) {
   const [saved, setSaved] = useState(isSaved)
   const [images, setImages] = useState({})
+  const { toast } = useToast()
 
   const fetchImageBlob = async (path) => {
     try {
@@ -47,10 +51,32 @@ export function OutfitCard({
     loadImages()
   }, [top, bottom, shoes, accessory])
 
-  const handleSave = () => {
-    setSaved(!saved)
-    if (onSave) {
-      onSave(top?.id || bottom?.id || shoes?.id) // usa un ID cualquiera del outfit
+  const handleSave = async () => {
+    try {
+      if (saved) {
+        await favoriteService.removeFavorite(id)
+        toast({
+          title: "Outfit removed",
+          description: "The outfit has been removed from your favorites.",
+        })
+      } else {
+        await favoriteService.addFavorite(id)
+        toast({
+          title: "Outfit saved",
+          description: "The outfit has been added to your favorites!",
+        })
+      }
+      setSaved(!saved)
+      if (onSave) {
+        onSave(id)
+      }
+    } catch (error) {
+      console.error("Error saving favorite:", error)
+      toast({
+        title: "Error",
+        description: "Could not update favorite status.",
+        variant: "destructive",
+      })
     }
   }
 
@@ -92,7 +118,7 @@ export function OutfitCard({
           <Heart className={`mr-1 h-4 w-4 ${saved ? "fill-current" : ""}`} />
           {saved ? "Saved" : "Save Outfit"}
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" disabled>
           Customize
         </Button>
       </CardFooter>
