@@ -9,6 +9,8 @@ import Outfits from '@/pages/Outfits';
 import Profile from '@/pages/Profile';
 import Login from "@/pages/Login"
 import Register from './pages/Register'
+import MyOutfitsPage from "@/pages/MyOutfitsPage"
+
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/my-outfits" element={<MyOutfitsPage />} />
+
 
       </Route>
     </Routes>

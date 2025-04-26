@@ -9,6 +9,15 @@ const outfitService = {
   async generate(data) {
     const res = await api.post("/outfits/recommendations", data)
     return res.data
+  },
+
+  /**
+   * Obtiene los outfits guardados por el usuario autenticado.
+   * @returns {Promise<Array>} Lista de outfits guardados
+   */
+  async getMyOutfits() {
+    const res = await api.get("/outfits/mine")
+    return res.data
   }
 }
 

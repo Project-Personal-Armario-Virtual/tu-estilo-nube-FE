@@ -16,6 +16,7 @@ const Navbar = () => {
     { href: "/closet", label: "My Closet", icon: Grid },
     { href: "/categories", label: "Categories", icon: Tag },
     { href: "/outfits", label: "Outfits", icon: Shirt },
+    { href: "/my-outfits", label: "My Outfits", icon: ShoppingBag },
     { href: "/profile", label: "Profile", icon: User },
   ]
 
