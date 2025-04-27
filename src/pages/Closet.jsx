@@ -1,18 +1,26 @@
 // src/pages/Closet.jsx
-import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import { Link } from "react-router-dom"
-import CategoryFilter from "@/components/closet/CategoryFilter"  
-import { ClosetItemsList } from "@/components/closet/ClosetItemsList"  
-
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import CategoryFilter from "@/components/closet/CategoryFilter";
+import { ClosetItemsList } from "@/components/closet/ClosetItemsList";
 
 export default function Closet() {
+  const [searchParams] = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
+
   const [filters, setFilters] = useState({
-    category: "all",
+    category: categoryFromUrl || "all",  // 🔥 Aquí leemos de la URL
     color: "all",
     season: "all",
-  })
+  });
+
+  useEffect(() => {
+    if (categoryFromUrl) {
+      setFilters(prev => ({ ...prev, category: categoryFromUrl }));
+    }
+  }, [categoryFromUrl]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -34,5 +42,5 @@ export default function Closet() {
         <ClosetItemsList filters={filters} />
       </main>
     </div>
-  )
+  );
 }

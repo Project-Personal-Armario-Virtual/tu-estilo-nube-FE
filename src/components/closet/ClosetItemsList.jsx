@@ -1,30 +1,30 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import api from "@/services/api"
-import { ItemCard } from "./ItemCard"
+import { useEffect, useState } from "react";
+import api from "@/services/api";
+import { ItemCard } from "./ItemCard";
 
-export function ClosetItemsList({ filters }) {
-  const [items, setItems] = useState([])
-  const [imagePreviews, setImagePreviews] = useState({})
+export function ClosetItemsList({ filters }) {  // 👈 export nombrado aquí
+  const [items, setItems] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState({});
 
   const fetchImages = async () => {
     try {
-      const res = await api.get("/images/list")
-      const previews = {}
+      const res = await api.get("/images/list");
+      const previews = {};
 
       for (const item of res.data) {
-        const imageBlob = await api.get(`/images/${item.id}`, { responseType: "blob" })
-        const imageUrl = URL.createObjectURL(imageBlob.data)
-        previews[item.id] = imageUrl
+        const imageBlob = await api.get(`/images/${item.id}`, { responseType: "blob" });
+        const imageUrl = URL.createObjectURL(imageBlob.data);
+        previews[item.id] = imageUrl;
       }
 
-      setItems(res.data)
-      setImagePreviews(previews)
+      setItems(res.data);
+      setImagePreviews(previews);
     } catch (error) {
-      console.error("Error loading user images:", error)
+      console.error("Error loading user images:", error);
     }
-  }
+  };
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this item?");
@@ -43,25 +43,24 @@ export function ClosetItemsList({ filters }) {
       console.error("Error deleting item:", error);
       alert("Cannot delete image because it is used in an outfit. Please delete the associated outfit first.");
     }
-  }
+  };
 
   useEffect(() => {
-    fetchImages()
+    fetchImages();
     return () => {
-      Object.values(imagePreviews).forEach((url) => URL.revokeObjectURL(url))
-    }
-  }, [])
+      Object.values(imagePreviews).forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
 
   const filteredItems = items.filter((item) => {
     const itemCategory = (item.categoryName || "Uncategorized").toLowerCase();
     const itemColor = (item.dominantColor || "").toLowerCase();
     const itemLabels = (item.labels || []).map(label => label.toLowerCase());
-  
+
     const matchCategory = filters.category === "all" || itemCategory === filters.category;
-    const matchColor = filters.color === "all" ||
-      (itemColor && itemColor !== "n/a" && itemColor.includes(filters.color));
+    const matchColor = filters.color === "all" || itemColor.includes(filters.color);
     const matchSeason = filters.season === "all" || itemLabels.includes(filters.season);
-  
+
     return matchCategory && matchColor && matchSeason;
   });
 
@@ -87,5 +86,5 @@ export function ClosetItemsList({ filters }) {
         <p className="text-center text-gray-500">No items found matching the selected filters.</p>
       )}
     </div>
-  )
+  );
 }

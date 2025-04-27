@@ -34,11 +34,23 @@ export default function Dashboard() {
           description="Saved outfit combinations"
         />
         <StatsCard
-          title="Most Common Color"
-          value={mostCommonColor || "—"}
-          icon={<LayoutGrid className="h-4 w-4" />}
-          description="In your wardrobe"
-        />
+  title="Most Common Color"
+  value={
+    mostCommonColor && mostCommonColor !== "N/A" ? (
+      <div className="flex items-center gap-2">
+        <span
+          className="h-4 w-4 rounded-full"
+          style={{ backgroundColor: mostCommonColor.toLowerCase() }}
+        ></span>
+        <span className="capitalize">{mostCommonColor}</span>
+      </div>
+    ) : (
+      "—"
+    )
+  }
+  icon={<LayoutGrid className="h-4 w-4" />}
+  description="In your wardrobe"
+/>
       </div>
 
       {/* Grilla principal */}
