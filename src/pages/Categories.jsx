@@ -35,8 +35,8 @@ export default function CategoriesPage() {
         const res = await api.get("/dashboard/categories");
         const fetched = res.data;
 
-        const merged = allCategories.map(cat => {
-          const found = fetched.find(c => c.category === cat);
+        const merged = allCategories.map((cat) => {
+          const found = fetched.find((c) => c.category === cat);
           return {
             category: cat,
             count: found ? found.count : 0,
@@ -54,32 +54,37 @@ export default function CategoriesPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-grow container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Categories</h1>
-          <p className="text-text/70">Browse your closet by category</p>
+      <main className="flex-grow container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-extrabold text-foreground mb-4">Categories</h1>
+          <p className="text-muted-foreground text-lg">
+            Browse your closet by category and discover all your items
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map(({ category, count }) => {
             const name = category;
             const Icon = iconMap[name] || Gem;
 
             return (
-              <Card key={name} className="overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10 pb-8">
+              <Card
+                key={name}
+                className="overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10 pb-6">
                   <div className="flex justify-between items-center">
-                    <CardTitle className="text-xl">{name}</CardTitle>
-                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center">
-                      <Icon className="h-5 w-5 text-primary" />
+                    <CardTitle className="text-2xl font-semibold text-foreground">{name}</CardTitle>
+                    <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center shadow-md">
+                      <Icon className="h-6 w-6 text-primary" />
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6">
-                  <p className="text-sm text-text/70 mb-4">Items in this category</p>
+                <CardContent className="pt-6 space-y-4">
+                  <p className="text-sm text-muted-foreground">Total items in this category:</p>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">{count} items</span>
-                    <Button asChild variant="outline" size="sm">
+                    <span className="text-lg font-bold text-foreground">{count} items</span>
+                    <Button asChild size="sm" className="hover:bg-primary/10 transition">
                       <Link to={`/closet?category=${name.toLowerCase()}`}>
                         View Items
                       </Link>

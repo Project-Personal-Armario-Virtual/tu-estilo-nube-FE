@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import OutfitGenerator from "@/components/outfits/OutfitGenerator";
 import { OutfitCard } from "@/components/outfits/OutfitCard";
@@ -40,15 +42,20 @@ export default function OutfitsPage() {
 
   return (
     <main className="container mx-auto py-8 px-4">
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-6">
         <h1 className="text-3xl font-bold">Outfit Recommendations</h1>
         <OutfitScoreInfo />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <OutfitGenerator onGenerate={handleGenerate} isGenerating={isGenerating} />
+        {/* Panel de generación */}
+        <div className="bg-background rounded-lg shadow-lg p-6 border border-border">
+          <OutfitGenerator onGenerate={handleGenerate} isGenerating={isGenerating} />
+        </div>
+
+        {/* Resultados */}
         <div className="lg:col-span-2">
           {outfits.length === 0 ? (
-            <p className="text-muted-foreground">No outfits yet. Generate your first!</p>
+            <p className="text-muted-foreground text-center text-lg">No outfits yet. Generate your first!</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {outfits.map((outfit) => (
@@ -63,8 +70,8 @@ export default function OutfitsPage() {
                   season={outfit.season}
                   score={outfit.score}
                   isSaved={outfit.isSaved}
-                  showSaveButton={true}    // <--- ¡ahora explícito!
-                  showDeleteButton={false} // <--- ¡no mostrar delete aquí!
+                  showSaveButton={true}
+                  showDeleteButton={false}
                   onSave={handleSaveOutfit}
                 />
               ))}

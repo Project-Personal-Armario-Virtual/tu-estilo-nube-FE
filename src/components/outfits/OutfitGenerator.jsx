@@ -1,12 +1,28 @@
-import React from "react"
-import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { Switch } from "@/components/ui/switch"
-import { useToast } from "@/hooks/use-toast"
-import { Wand2 } from "lucide-react"
+"use client";
+
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+import { Wand2 } from "lucide-react";
 
 const occasions = [
   { value: "casual", label: "Casual" },
@@ -14,17 +30,17 @@ const occasions = [
   { value: "formal", label: "Formal" },
   { value: "sport", label: "Sport/Workout" },
   { value: "party", label: "Party" },
-]
+];
 
 const seasons = [
   { value: "spring", label: "Spring" },
   { value: "summer", label: "Summer" },
   { value: "fall", label: "Fall" },
   { value: "winter", label: "Winter" },
-]
+];
 
 export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const form = useForm({
     defaultValues: {
@@ -33,7 +49,7 @@ export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
       colorCoordination: 3,
       includeAccessories: true,
     },
-  })
+  });
 
   const onSubmit = (values) => {
     if (!values.occasion || !values.season) {
@@ -41,16 +57,18 @@ export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
         title: "Missing information",
         description: "Please select both occasion and season.",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
-    onGenerate(values)
-  }
+    onGenerate(values);
+  };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Generate Outfit</h2>
+    <div className="bg-white dark:bg-muted p-6 rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+        Generate Outfit
+      </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -59,7 +77,7 @@ export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
               name="occasion"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Occasion</FormLabel>
+                  <FormLabel className="text-gray-700 dark:text-gray-300">Occasion</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -82,7 +100,7 @@ export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
               name="season"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Season</FormLabel>
+                  <FormLabel className="text-gray-700 dark:text-gray-300">Season</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -106,7 +124,7 @@ export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
             name="colorCoordination"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Color Coordination</FormLabel>
+                <FormLabel className="text-gray-700 dark:text-gray-300">Color Coordination</FormLabel>
                 <FormControl>
                   <Slider
                     min={1}
@@ -116,7 +134,9 @@ export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
                     onValueChange={(value) => field.onChange(value[0])}
                   />
                 </FormControl>
-                <FormDescription>Monochromatic to Contrasting</FormDescription>
+                <FormDescription className="text-gray-500 dark:text-gray-400">
+                  Monochromatic to Contrasting
+                </FormDescription>
               </FormItem>
             )}
           />
@@ -126,7 +146,7 @@ export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
             name="includeAccessories"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between">
-                <FormLabel>Include Accessories</FormLabel>
+                <FormLabel className="text-gray-700 dark:text-gray-300">Include Accessories</FormLabel>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
@@ -141,5 +161,5 @@ export default function OutfitGenerator({ onGenerate, isGenerating = false }) {
         </form>
       </Form>
     </div>
-  )
+  );
 }
