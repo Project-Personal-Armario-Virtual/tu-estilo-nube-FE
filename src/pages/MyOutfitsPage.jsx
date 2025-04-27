@@ -1,54 +1,54 @@
-import { useEffect, useState } from "react"
-import outfitService from "@/services/outfitService"
-import { OutfitCard } from "@/components/outfits/OutfitCard"
-import { useToast } from "@/hooks/use-toast"
+import { useEffect, useState } from "react";
+import { OutfitCard } from "@/components/outfits/OutfitCard";
+import outfitService from "@/services/outfitService";
+import { useToast } from "@/hooks/use-toast";
 
 export default function MyOutfitsPage() {
-  const [outfits, setOutfits] = useState([])
-  const { toast } = useToast()
+  const [outfits, setOutfits] = useState([]);
+  const { toast } = useToast();
 
   const loadOutfits = async () => {
     try {
-      const data = await outfitService.getAll()
-      setOutfits(data)
+      const data = await outfitService.getAll();
+      setOutfits(data);
     } catch (error) {
-      console.error("Failed to load outfits", error)
+      console.error("Failed to load outfits", error);
       toast({
         title: "Error",
-        description: "Failed to load outfits.",
+        description: "Could not load saved outfits.",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   useEffect(() => {
-    loadOutfits()
-  }, [])
+    loadOutfits();
+  }, []);
 
   const handleDelete = async (outfitId) => {
     try {
-      await outfitService.deleteOutfit(outfitId)
+      await outfitService.deleteOutfit(outfitId);
+      setOutfits((prev) => prev.filter((outfit) => outfit.id !== outfitId));
       toast({
         title: "Deleted",
         description: "Outfit has been deleted.",
-      })
-      setOutfits((prev) => prev.filter((o) => o.id !== outfitId))
+      });
     } catch (error) {
-      console.error("Failed to delete outfit", error)
+      console.error("Failed to delete outfit", error);
       toast({
         title: "Error",
         description: "Failed to delete outfit.",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   if (outfits.length === 0) {
     return (
       <div className="p-6 text-center text-muted-foreground">
         You have no saved outfits yet.
       </div>
-    )
+    );
   }
 
   return (
@@ -64,10 +64,12 @@ export default function MyOutfitsPage() {
           occasion={outfit.occasion}
           season={outfit.season}
           score={outfit.score}
-          isSaved
+          isSaved={true}
+          showSaveButton={false}
+          showDeleteButton={true}
           onDelete={handleDelete}
         />
       ))}
     </div>
-  )
+  );
 }

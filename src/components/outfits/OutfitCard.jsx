@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Heart, Trash2 } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -15,7 +15,10 @@ export function OutfitCard({
   season,
   score,
   onSave,
+  onDelete,
   isSaved = false,
+  showSaveButton = true,
+  showDeleteButton = false,
 }) {
   const [saved, setSaved] = useState(isSaved);
   const [images, setImages] = useState({});
@@ -26,9 +29,7 @@ export function OutfitCard({
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`http://localhost:8080${path}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Image fetch failed");
       const blob = await res.blob();
@@ -64,49 +65,29 @@ export function OutfitCard({
           season,
           score,
         });
-
-        if (!createdOutfit) {
-          throw new Error("No se pudo crear el outfit");
-        }
-        currentOutfitId = createdOutfit; // aquí ya no .id
+        currentOutfitId = createdOutfit;
         setOutfitId(currentOutfitId);
       }
 
       if (saved) {
         await favoriteService.removeFavorite(currentOutfitId);
-        toast({
-          title: "Outfit removed",
-          description: "The outfit has been removed from your favorites.",
-        });
+        toast({ title: "Outfit removed", description: "The outfit has been removed from your favorites." });
       } else {
         await favoriteService.addFavorite(currentOutfitId);
-        toast({
-          title: "Outfit saved",
-          description: "The outfit has been added to your favorites!",
-        });
+        toast({ title: "Outfit saved", description: "The outfit has been added to your favorites!" });
       }
       setSaved(!saved);
-      if (onSave) {
-        onSave(currentOutfitId);
-      }
+      if (onSave) onSave(currentOutfitId);
     } catch (error) {
       console.error("Error saving favorite:", error);
-      toast({
-        title: "Error",
-        description: "Could not update favorite status.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Could not update favorite status.", variant: "destructive" });
     }
   };
 
   const renderItem = (item, imgSrc) =>
     item ? (
       <div key={item.id} className="relative aspect-square bg-gray-100 rounded-md overflow-hidden">
-        <img
-          src={imgSrc}
-          alt={item.category}
-          className="object-cover w-full h-full"
-        />
+        <img src={imgSrc} alt={item.category} className="object-cover w-full h-full" />
         <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1 truncate">
           {item.category}
         </div>
@@ -127,19 +108,30 @@ export function OutfitCard({
         <p className="text-sm text-muted-foreground">Season: {season}</p>
         <p className="text-sm text-muted-foreground">Score: {score?.toFixed(2)} / 1.00</p>
       </CardContent>
+
       <CardFooter className="border-t p-4 flex justify-between">
-        <Button
-          variant={saved ? "default" : "outline"}
-          size="sm"
-          onClick={handleSave}
-          className={saved ? "bg-primary text-white" : ""}
-        >
-          <Heart className={`mr-1 h-4 w-4 ${saved ? "fill-current" : ""}`} />
-          {saved ? "Saved" : "Save Outfit"}
-        </Button>
-        <Button variant="outline" size="sm" disabled>
-          Customize
-        </Button>
+        {showSaveButton && (
+          <Button
+            variant={saved ? "default" : "outline"}
+            size="sm"
+            onClick={handleSave}
+            className={saved ? "bg-primary text-white" : ""}
+          >
+            <Heart className={`mr-1 h-4 w-4 ${saved ? "fill-current" : ""}`} />
+            {saved ? "Saved" : "Save Outfit"}
+          </Button>
+        )}
+
+        {showDeleteButton && onDelete && (
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => onDelete(outfitId)}
+          >
+            <Trash2 className="mr-1 h-4 w-4" />
+            Delete
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
