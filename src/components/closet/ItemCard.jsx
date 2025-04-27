@@ -1,7 +1,7 @@
 // src/components/closet/ItemCard.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { MoreHorizontal, Trash2 } from "lucide-react"; // 👈 solo Trash2 ahora
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,9 +17,7 @@ const COLOR_LABELS = [
 ];
 
 function extractColorFromLabels(labels = []) {
-  const found = labels.find((label) =>
-    COLOR_LABELS.includes(label.trim())
-  );
+  const found = labels.find((label) => COLOR_LABELS.includes(label.trim()));
   return found || "N/A";
 }
 
@@ -47,12 +45,6 @@ export function ItemCard({ id, name, category, labels = [], image, onDelete }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link to={`/closet/${id}/edit`} className="cursor-pointer">
-                  <Edit className="mr-2 h-4 w-4" />
-                  <span>Edit</span>
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-red-500 focus:text-red-500"
                 onClick={() => onDelete?.(id)}

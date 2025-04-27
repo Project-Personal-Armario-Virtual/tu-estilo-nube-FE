@@ -10,6 +10,7 @@ import Profile from '@/pages/Profile';
 import Login from "@/pages/Login"
 import Register from './pages/Register'
 import MyOutfitsPage from "@/pages/MyOutfitsPage"
+import {ClosetItemDetails} from "@/pages/ClosetItemDetails";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/my-outfits" element={<MyOutfitsPage />} />
+        <Route path="/closet/:id" element={<ClosetItemDetails />} />
 
 
       </Route>

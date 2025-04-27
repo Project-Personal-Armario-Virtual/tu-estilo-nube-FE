@@ -13,14 +13,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+// Categorías reales basadas en tu sistema
 const categories = [
   { value: "all", label: "All Items" },
-  { value: "tops", label: "Tops" },
-  { value: "bottoms", label: "Bottoms" },
+  { value: "shirts", label: "Shirts" },
+  { value: "pants", label: "Pants" },
   { value: "outerwear", label: "Outerwear" },
-  { value: "dresses", label: "Dresses" },
-  { value: "shoes", label: "Shoes" },
+  { value: "underwear", label: "Underwear / Sports Bras" },
   { value: "accessories", label: "Accessories" },
+  { value: "shoes", label: "Shoes" },
+  { value: "uncategorized", label: "Uncategorized" },
 ];
 
 const colors = [
@@ -84,6 +86,7 @@ export default function CategoryFilter({ onFilterChange }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
+        {/* Category Filter */}
         <Popover open={openCategory} onOpenChange={setOpenCategory}>
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={openCategory} className="justify-between">
@@ -109,6 +112,7 @@ export default function CategoryFilter({ onFilterChange }) {
           </PopoverContent>
         </Popover>
 
+        {/* Color Filter */}
         <Popover open={openColor} onOpenChange={setOpenColor}>
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={openColor} className="justify-between">
@@ -134,6 +138,7 @@ export default function CategoryFilter({ onFilterChange }) {
           </PopoverContent>
         </Popover>
 
+        {/* Season Filter */}
         <Popover open={openSeason} onOpenChange={setOpenSeason}>
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={openSeason} className="justify-between">
@@ -166,6 +171,7 @@ export default function CategoryFilter({ onFilterChange }) {
         )}
       </div>
 
+      {/* Active filters badges */}
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2">
           {category !== "all" && (

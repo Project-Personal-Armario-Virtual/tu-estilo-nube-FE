@@ -1,13 +1,13 @@
-import { StatsCard } from "@/components/dashboard/StatsCard"
-import { RecentItems } from "@/components/dashboard/RecentItems"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Shirt, Tag, Clock, Plus, Sparkles, LayoutGrid } from "lucide-react"
-import { Link } from "react-router-dom"
-import { useDashboardStats } from "@/hooks/useDashboardStats"
+import { StatsCard } from "@/components/dashboard/StatsCard";
+import { RecentItems } from "@/components/dashboard/RecentItems";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Shirt, Tag, Plus, Sparkles, LayoutGrid } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
 
 export default function Dashboard() {
-  const { totalItems, totalCategories, mostCommonColor } = useDashboardStats()
+  const { totalItems, totalCategories, mostCommonColor, totalOutfits } = useDashboardStats(); // 👈 incluimos totalOutfits
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -29,16 +29,28 @@ export default function Dashboard() {
         />
         <StatsCard
           title="Outfits Created"
-          value="—"
+          value={totalOutfits ?? "—"} // 👈 mostramos totalOutfits real
           icon={<Sparkles className="h-4 w-4" />}
           description="Saved outfit combinations"
         />
         <StatsCard
-          title="Most Common Color"
-          value={mostCommonColor || "—"}
-          icon={<LayoutGrid className="h-4 w-4" />}
-          description="In your wardrobe"
-        />
+  title="Most Common Color"
+  value={
+    mostCommonColor && mostCommonColor !== "N/A" ? (
+      <div className="flex items-center gap-2">
+        <span
+          className="h-4 w-4 rounded-full"
+          style={{ backgroundColor: mostCommonColor.toLowerCase() }}
+        ></span>
+        <span className="capitalize">{mostCommonColor}</span>
+      </div>
+    ) : (
+      "—"
+    )
+  }
+  icon={<LayoutGrid className="h-4 w-4" />}
+  description="In your wardrobe"
+/>
       </div>
 
       {/* Grilla principal */}
@@ -74,5 +86,5 @@ export default function Dashboard() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
