@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Función para convertir nombres de archivo a formato bonito
+// Función para convertir nombres de archivo a un formato bonito
 function formatFileName(fileName) {
   if (!fileName) return "";
   const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, "");
@@ -26,18 +26,7 @@ function formatFileName(fileName) {
     .join(" ");
 }
 
-const COLOR_LABELS = [
-  "Red", "Blue", "Green", "Yellow", "Black", "White", "Gray",
-  "Orange", "Pink", "Purple", "Brown", "Beige", "Navy", "Teal",
-];
-
-function extractColorFromLabels(labels = []) {
-  const found = labels.find((label) => COLOR_LABELS.includes(label.trim()));
-  return found || "N/A";
-}
-
-export function ItemCard({ id, name, category, labels = [], image, onDelete }) {
-  const color = extractColorFromLabels(labels);
+export function ItemCard({ id, name, category, dominantColor = "N/A", labels = [], image, onDelete }) {
   const displayName = formatFileName(name);
 
   return (
@@ -77,7 +66,7 @@ export function ItemCard({ id, name, category, labels = [], image, onDelete }) {
         <h3 className="font-medium line-clamp-1">{displayName}</h3>
         <div className="mt-1 text-sm text-text/70 space-y-1">
           <p>Category: {category || "Uncategorized"}</p>
-          <p>Color: {color}</p>
+          <p>Color: {dominantColor}</p>
           {labels.length > 0 && <p>Tags: {labels.join(", ")}</p>}
         </div>
         <div className="mt-auto pt-4">

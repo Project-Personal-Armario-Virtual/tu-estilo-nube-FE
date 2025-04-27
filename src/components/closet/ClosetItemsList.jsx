@@ -1,3 +1,4 @@
+// src/components/closet/ClosetItemsList.jsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -57,16 +58,21 @@ export function ClosetItemsList({ filters }) {
     };
   }, []);
 
+  const normalizeCategory = (text) => {
+    if (!text) return "uncategorized";
+    return text.toLowerCase().replace(/\s|\/|\-/g, '');
+  };
+
   const filteredItems = items.filter((item) => {
-    const itemCategory = (item.categoryName || "Uncategorized").toLowerCase();
+    const itemCategory = normalizeCategory(item.categoryName || "uncategorized");
     const itemColor = (item.dominantColor || "").toLowerCase();
     const itemLabels = (item.labels || []).map(label => label.toLowerCase());
 
-    const matchCategory = filters.category === "all" || itemCategory === filters.category;
-    const matchColor = filters.color === "all" || itemColor.includes(filters.color);
-    const matchSeason = filters.season === "all" || itemLabels.includes(filters.season);
+    const filterCategory = filters.category === "all" || normalizeCategory(filters.category) === itemCategory;
+    const filterColor = filters.color === "all" || itemColor.includes(filters.color);
+    const filterSeason = filters.season === "all" || itemLabels.includes(filters.season);
 
-    return matchCategory && matchColor && matchSeason;
+    return filterCategory && filterColor && filterSeason;
   });
 
   return (
@@ -101,7 +107,7 @@ export function ClosetItemsList({ filters }) {
                 id={item.id}
                 name={item.fileName}
                 category={item.categoryName || "Uncategorized"}
-                color={item.color || "N/A"}
+                dominantColor={item.dominantColor || "N/A"}
                 image={imagePreviews[item.id]}
                 onDelete={handleDelete}
                 labels={item.labels}
