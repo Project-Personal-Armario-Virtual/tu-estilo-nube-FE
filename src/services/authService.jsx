@@ -1,38 +1,22 @@
-
-import api from './api';
+import api from "./api";
 
 const API_URL = '/auth';
 
-
 const authService = {
-
   async login({ username, password }) {
-    try {
-      const { data } = await api.post(`${API_URL}/login`, { username, password });
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        authService.setToken(data.token);
-      }
-      return data;
-    } catch (err) {
-      throw new Error(err.response?.data?.message || 'Error de conexión');
+    const { data } = await api.post(`${API_URL}/login`, { username, password });
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      authService.setToken(data.token);
     }
-  },
- 
-  async register({ username, email, password }) {
-    try {
-      const response = await api.post(`${API_URL}/register`, {
-        username,
-        email,
-        password,
-      });
-      return response.data; 
-    } catch (error) {
-      throw new Error(error.response?.data || "Registration failed");
-    }
+    return data;
   },
 
+  async register({ username, email, password }) {
+    const response = await api.post(`${API_URL}/register`, { username, email, password });
+    return response.data;
+  },
 
   logout() {
     localStorage.removeItem('token');
@@ -40,7 +24,6 @@ const authService = {
     authService.setToken(null);
   },
 
- 
   setToken(token) {
     if (token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -49,12 +32,10 @@ const authService = {
     }
   },
 
-
   getCurrentUser() {
     const u = localStorage.getItem('user');
     return u ? JSON.parse(u) : null;
   },
-
 
   isAuthenticated() {
     return Boolean(localStorage.getItem('token'));
