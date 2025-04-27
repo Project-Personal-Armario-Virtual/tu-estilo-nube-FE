@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import api from "@/services/api";
 import { ItemCard } from "./ItemCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export function ClosetItemsList({ filters }) {  // 👈 export nombrado aquí
+export function ClosetItemsList({ filters }) {
   const [items, setItems] = useState([]);
   const [imagePreviews, setImagePreviews] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const fetchImages = async () => {
     try {
@@ -23,6 +26,8 @@ export function ClosetItemsList({ filters }) {  // 👈 export nombrado aquí
       setImagePreviews(previews);
     } catch (error) {
       console.error("Error loading user images:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,21 +72,43 @@ export function ClosetItemsList({ filters }) {  // 👈 export nombrado aquí
   return (
     <div className="mt-10 space-y-6">
       <h3 className="text-xl font-semibold">My Closet Items</h3>
-      {filteredItems.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filteredItems.map((item) => (
-            <ItemCard
-              key={item.id}
-              id={item.id}
-              name={item.fileName}
-              category={item.categoryName || "Uncategorized"}
-              color={item.color || "N/A"}
-              image={imagePreviews[item.id]}
-              onDelete={handleDelete}
-              labels={item.labels}
-            />
+
+      {loading ? (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          {[...Array(6)].map((_, idx) => (
+            <Skeleton key={idx} className="h-72 w-full rounded-xl" />
           ))}
-        </div>
+        </motion.div>
+      ) : filteredItems.length > 0 ? (
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          {filteredItems.map((item) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: item.id * 0.02 }}
+            >
+              <ItemCard
+                id={item.id}
+                name={item.fileName}
+                category={item.categoryName || "Uncategorized"}
+                color={item.color || "N/A"}
+                image={imagePreviews[item.id]}
+                onDelete={handleDelete}
+                labels={item.labels}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
       ) : (
         <p className="text-center text-gray-500">No items found matching the selected filters.</p>
       )}
