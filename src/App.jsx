@@ -12,7 +12,7 @@ import Profile from "@/pages/Profile";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import MyOutfitsPage from "@/pages/MyOutfitsPage";
-import ClosetItemDetails from "@/pages/ClosetItemDetails";
+import { ClosetItemDetails } from "@/pages/ClosetItemDetails";
 import NotFound from "@/pages/NotFound";
 
 export default function App() {
