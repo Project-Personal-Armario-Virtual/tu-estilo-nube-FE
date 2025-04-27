@@ -1,4 +1,4 @@
-// src/pages/Dashboard.jsx
+
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { RecentItems } from "@/components/dashboard/RecentItems";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export default function Dashboard() {
         <p className="text-muted-foreground">Overview of your wardrobe and activities</p>
       </div>
 
-      {/* Grid de estadísticas */}
+  
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
         <StatsCard
           title="Total Items"
@@ -57,11 +57,11 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Grilla principal */}
+  
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <RecentItems />
 
-        {/* Acciones rápidas */}
+ 
         <Card className="col-span-1 shadow-md hover:shadow-lg transition-all">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>

@@ -17,14 +17,14 @@ import NotFound from "@/pages/NotFound";
 export default function App() {
   return (
     <Routes>
-      {/* Layout principal que envuelve todas las rutas */}
+     
       <Route element={<Layout />}>
-        {/* Rutas públicas */}
+        
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
-        {/* Rutas protegidas dentro del Layout */}
+       
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/closet" element={<Closet />} />
@@ -36,7 +36,7 @@ export default function App() {
           <Route path="/closet/:id" element={<ClosetItemDetails />} />
         </Route>
         
-        {/* Ruta 404 */}
+       
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

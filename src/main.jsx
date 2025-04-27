@@ -6,7 +6,7 @@ import api from './services/api';
 import './index.css';
 import App from './App.jsx';
 
-// Si ya hay token guardado, lo ponemos en el header Authorization
+
 const token = localStorage.getItem('token');
 if (token) {
   api.defaults.headers.common['Authorization'] = `Bearer ${token}`;

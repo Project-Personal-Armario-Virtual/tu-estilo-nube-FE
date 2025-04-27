@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Función para convertir nombres de archivo a un formato bonito
+
 function formatFileName(fileName) {
   if (!fileName) return "";
   const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, "");

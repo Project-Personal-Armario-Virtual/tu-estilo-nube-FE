@@ -34,9 +34,9 @@ export default function Profile() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Left Side - Profile and Security */}
+         
           <div className="md:col-span-2 space-y-6">
-            {/* Profile Info */}
+          
             <Card className="shadow-sm hover:shadow-md transition">
               <CardHeader>
                 <CardTitle>Account Information</CardTitle>
@@ -46,7 +46,7 @@ export default function Profile() {
               </CardContent>
             </Card>
 
-            {/* Change Password */}
+         
             <Card className="shadow-sm hover:shadow-md transition">
               <CardHeader>
                 <CardTitle>Change Password</CardTitle>
@@ -57,9 +57,9 @@ export default function Profile() {
             </Card>
           </div>
 
-          {/* Right Side - Preferences and Actions */}
+          
           <div className="space-y-6">
-            {/* Theme Toggle */}
+   
             <Card className="shadow-sm hover:shadow-md transition">
               <CardHeader>
                 <CardTitle>Preferences</CardTitle>
@@ -79,7 +79,7 @@ export default function Profile() {
               </CardContent>
             </Card>
 
-            {/* Sign out and Delete account */}
+   
             <Card className="shadow-sm hover:shadow-md transition">
               <CardHeader>
                 <CardTitle>Account Actions</CardTitle>
