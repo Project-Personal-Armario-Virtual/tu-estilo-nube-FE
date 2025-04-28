@@ -1,8 +1,14 @@
-import React, { useState } from "react";
-import { login } from "../services/authService";
-import { useNavigate } from 'react-router-dom';
+"use client";
 
-const Login = () => {
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import authService from "@/services/authService";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+
+export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -10,42 +16,69 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Enviando credenciales:", { username, password }); // Depuración
     try {
-      const token = await login(username, password);
-      setMessage("Login successful");
-      navigate('/upload');
-    } catch (error) {
-      console.error("Error en el login:", error.response || error); // Detalle del error
-      setMessage("Invalid credentials");
+      await authService.login({ username, password });
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      setMessage("Invalid credentials. Please try again.");
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
-  );
-};
+    <main className="min-h-screen flex items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md shadow-lg hover:shadow-xl transition">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-bold text-gray-800 dark:text-white">
+            Welcome Back
+          </CardTitle>
+          <p className="mt-2 text-gray-500 dark:text-gray-400 text-sm">
+            Please enter your credentials to continue
+          </p>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-6 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="username" className="text-gray-700 dark:text-gray-300">
+                Username
+              </Label>
+              <Input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                placeholder="Enter your username"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter your password"
+              />
+            </div>
 
-export default Login;
+            <Button
+              type="submit"
+              className="w-full bg-primary hover:bg-primary/90 transition"
+            >
+              Sign In
+            </Button>
+          </form>
+
+          {message && (
+            <p className="text-red-500 text-sm mt-4 text-center animate-pulse">
+              {message}
+            </p>
+          )}
+        </CardContent>
+      </Card>
+    </main>
+  );
+}
