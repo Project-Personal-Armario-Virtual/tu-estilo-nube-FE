@@ -1,7 +1,8 @@
-// src/components/closet/ItemCard.jsx
+"use client";
+
 import React from "react";
 import { Link } from "react-router-dom";
-import { MoreHorizontal, Trash2 } from "lucide-react"; // 👈 solo Trash2 ahora
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,25 +12,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const COLOR_LABELS = [
-  "Red", "Blue", "Green", "Yellow", "Black", "White", "Gray",
-  "Orange", "Pink", "Purple", "Brown", "Beige", "Navy", "Teal",
-];
 
-function extractColorFromLabels(labels = []) {
-  const found = labels.find((label) => COLOR_LABELS.includes(label.trim()));
-  return found || "N/A";
+function formatFileName(fileName) {
+  if (!fileName) return "";
+  const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, "");
+  const cleaned = nameWithoutExtension
+    .replace(/_/g, " ")
+    .replace(/removebg-preview/gi, "")
+    .trim();
+  return cleaned
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
-export function ItemCard({ id, name, category, labels = [], image, onDelete }) {
-  const color = extractColorFromLabels(labels);
+export function ItemCard({ id, name, category, dominantColor = "N/A", labels = [], image, onDelete }) {
+  const displayName = formatFileName(name);
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col">
+    <Card className="overflow-hidden h-full flex flex-col animate-fadeIn">
       <div className="relative w-full h-60 bg-gray-100">
         <img
           src={image || "/placeholder.svg"}
-          alt={name}
+          alt={displayName}
           className="object-contain w-full h-full"
         />
         <div className="absolute top-2 right-2">
@@ -56,11 +61,12 @@ export function ItemCard({ id, name, category, labels = [], image, onDelete }) {
           </DropdownMenu>
         </div>
       </div>
+
       <CardContent className="p-4 flex-grow flex flex-col">
-        <h3 className="font-medium line-clamp-1">{name}</h3>
+        <h3 className="font-medium line-clamp-1">{displayName}</h3>
         <div className="mt-1 text-sm text-text/70 space-y-1">
           <p>Category: {category || "Uncategorized"}</p>
-          <p>Color: {color}</p>
+          <p>Color: {dominantColor}</p>
           {labels.length > 0 && <p>Tags: {labels.join(", ")}</p>}
         </div>
         <div className="mt-auto pt-4">
